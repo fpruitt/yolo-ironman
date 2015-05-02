@@ -23,7 +23,6 @@ Loop(function(delta)
 	}
 })
 
-
 var GameFrame = require("<scripts>/components/GameFrame")
 
 var Game = React.createClass({
