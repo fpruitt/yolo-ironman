@@ -1,7 +1,30 @@
 var Loop = require("<scripts>/utilities/Loop")
 var Input = require("<scripts>/utilities/Input")
 
+var World = require("<scripts>/components/World")
+var Jack = require("<scripts>/components/Jack")
 
+var tiledmap = require("<assets>/tileMap.json")
+
+var world = {
+    tiles: {}
+}
+
+var tiles = tiledmap.layers[0].data
+for(var x = 0; x < tiledmap.width; x++) {
+    for(var y = 0; y < tiledmap.height; y++) {
+        world.tiles[x + "x" + y] = {
+            position: {
+                x: x,
+                y: y
+            },
+            tileset: tiles[y * tiledmap.width + x],
+            passable: tiles[y * tiledmap.width + x] == 3351
+        }
+    }
+}
+world.width = tiledmap.width
+world.height = tiledmap.height
 
 var jack = {
     position: {
@@ -23,7 +46,7 @@ var Game = React.createClass({
     render: function() {
         return (
             <GameFrame>
-                Hello World?
+                <World world={world}/>
                 <Jack data={jack}/>
             </GameFrame>
         )
@@ -47,11 +70,11 @@ var Game = React.createClass({
         	|| Input.isHammered(39)) {
         		jack.velocity.x +=  jack.acceleration * delta
         	}
+            // Maximum Velocity
             if(jack.velocity.x > jack.max_velocity)
                 jack.velocity.x = jack.max_velocity
             if(jack.velocity.x < -jack.max_velocity)
                 jack.velocity.x = -jack.max_velocity
-                
             if(jack.velocity.y > jack.max_velocity)
                 jack.velocity.y = jack.max_velocity
             if(jack.velocity.y < -jack.max_velocity)
@@ -59,7 +82,7 @@ var Game = React.createClass({
             // Translation
             jack.position.x += jack.velocity.x
             jack.position.y += jack.velocity.y
-            // Deacceleration 
+            // Deacceleration
             if(jack.velocity.x > 0)
             {
                 jack.velocity.x -= jack.deacceleration * delta
@@ -84,24 +107,6 @@ var Game = React.createClass({
             }
             this.forceUpdate()
         }.bind(this))
-    }
-})
-
-var Jack = React.createClass({
-    render: function() {
-        return (
-            <div style={this.renderStyles()}></div>
-        )
-    },
-    renderStyles: function() {
-        return {
-            width: "1em",
-            height: "1em",
-            position: "absolute",
-            top: this.props.data.position.y + "em",
-            left: this.props.data.position.x + "em",
-            backgroundColor: "red"
-        }
     }
 })
 
