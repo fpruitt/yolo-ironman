@@ -4,7 +4,7 @@ var Input = require("<scripts>/utilities/Input")
 var World = require("<scripts>/components/World")
 var Jack = require("<scripts>/components/Jack")
 
-var tiledmap = require("<assets>/tileMap.json")
+var tiledmap = require("<assets>/tilemap.json")
 
 var world = {
     tiles: {}
@@ -19,7 +19,7 @@ for(var x = 0; x < tiledmap.width; x++) {
                 y: y
             },
             image: tiles[y * tiledmap.width + x],
-            passable: tiles[y * tiledmap.width + x] == 3351
+            passable: tiles[y * tiledmap.width + x] != 149 && tiles[y * tiledmap.width + x] != 195
         }
     }
 }
@@ -48,13 +48,13 @@ var Camera = React.createClass({
             <div style={this.renderStyles()}>
                 {this.props.children}
             </div>
-            
+
         )
     },
     renderStyles: function(){
         return {
-            position: 'absolute', 
-            top: this.props.target.position.y * -1 + HEIGHT/2 + 'em', 
+            position: 'absolute',
+            top: this.props.target.position.y * -1 + HEIGHT/2 + 'em',
             left: this.props.target.position.x * -1 + WIDTH/2 + 'em'
         }
     }
