@@ -18,7 +18,7 @@ for(var x = 0; x < tiledmap.width; x++) {
                 x: x,
                 y: y
             },
-            tileset: tiles[y * tiledmap.width + x],
+            image: tiles[y * tiledmap.width + x],
             passable: tiles[y * tiledmap.width + x] == 3351
         }
     }
