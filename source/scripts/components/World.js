@@ -10,19 +10,23 @@ var World = React.createClass({
     renderStyles: function() {
         return {
             "width": this.props.world.width + "em",
-            "height": this.props.world.height + "em",
-            "backgroundColor": "orange"
+            "height": this.props.world.height + "em"
         }
     },
     renderCanvas: function() {
         var canvas = this.refs.canvas.getDOMNode().getContext("2d")
-        for(var index in this.props.world.tiles) {
-            var tile = this.props.world.tiles[index]
-            canvas.fillStyle = this.tiles.images[tile.tileset]
-            var x = tile.position.x * 32
-            var y = tile.position.y * 32
-            canvas.fillRect(x, y, 32, 32)
-        }
+        var img = new Image()
+        img.src = "assets/tileset.bmp"
+        img.onload = function() {
+            for(var index in this.props.world.tiles) {
+                var tile = this.props.world.tiles[index]
+                var x = tile.position.x * 32
+                var y = tile.position.y * 32
+                var sy = Math.floor(tile.image / 64)
+                var sx = tile.image - (Math.floor(tile.image / 64) * 64) - 1
+                canvas.drawImage(img, sx * 32, sy * 32, 32, 32, x, y, 32, 32)
+            }
+        }.bind(this)
     },
     componentDidMount: function() {
         this.renderCanvas()
