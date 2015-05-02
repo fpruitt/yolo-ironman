@@ -16,10 +16,55 @@ jack.scale.y = 0.01
 
 stage.addChild(jack);
 
-function animate()
-{
-	requestAnimFrame(animate);
-	renderer.render(stage);
+var Loop = function(func) {
+    (function loop(time) {
+    	func(Math.min((Date.now() - time) / 1000, 1))
+        window.requestAnimationFrame(loop.bind(null, Date.now()))
+    })(Date.now())
 }
 
-animate()
+var Input = {
+    data: {/*keys go here*/},
+    isHammered: function(key) {
+        return this.data[key] === true
+    },
+    hammer: function(key) {
+        this.data[key] = true
+    },
+    unhammer: function(key) {
+        delete this.data[key]
+    }
+}
+
+document.addEventListener("keydown", function(event) {
+    if(!Input.isHammered(event.keyCode)) {
+        Input.hammer(event.keyCode)
+    }
+})
+
+document.addEventListener("keyup", function(event) {
+	Input.unhammer(event.keyCode)
+})
+
+var speed = 1
+
+Loop(function(delta)
+{
+	if(Input.isHammered(87)
+	|| Input.isHammered(38)) {
+		jack.position.y -= speed
+	}
+	if(Input.isHammered(83)
+	|| Input.isHammered(40)) {
+		jack.position.y += speed
+	}
+	if(Input.isHammered(65)
+	|| Input.isHammered(37)) {
+		jack.position.x -= speed
+	}
+	if(Input.isHammered(68)
+	|| Input.isHammered(39)) {
+		jack.position.x += speed
+	}
+	renderer.render(stage);
+})
