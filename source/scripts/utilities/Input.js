@@ -21,4 +21,4 @@ document.addEventListener("keyup", function(event) {
 	Input.unhammer(event.keyCode)
 })
 
-modules.export = Input
+module.exports = Input
