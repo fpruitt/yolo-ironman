@@ -1,0 +1,37 @@
+{
+  "name": "yolo-ironman",
+  "version": "1.0.0",
+  "description": "Gighacks Project by Andrew McPherson and Forrest Pruitt",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fpruitt/yolo-ironman"
+  },
+  "keywords": [
+    "game",
+    "gig",
+    "hack",
+    "fun",
+    "love",
+    "hate",
+    "state",
+    "country",
+    "city",
+    "tennessee",
+    "ironman",
+    "yolo"
+  ],
+  "author": "Andrew McPherson and Forrest Pruitt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fpruitt/yolo-ironman/issues"
+  },
+  "homepage": "https://github.com/fpruitt/yolo-ironman",
+  "dependencies": {
+    "express": "^4.12.3"
+  }
+}
