@@ -7,7 +7,10 @@ var Jack = require("<scripts>/components/Jack")
 var tiledmap = require("<assets>/tileMap.json")
 
 var world = {
-    tiles: {}
+    tiles: {},
+    getTile: function(x, y){
+        return this.tiles[Math.floor(x) + "x" + Math.floor(y)]
+    }
 }
 
 var tiles = tiledmap.layers[0].data
@@ -28,8 +31,8 @@ world.height = tiledmap.height
 
 var jack = {
     position: {
-        x: 5,
-        y: 10
+        x: 10,
+        y: 15
     },
     velocity: {
         x: 0,
@@ -100,19 +103,27 @@ var Game = React.createClass({
             if(jack.velocity.y < -jack.max_velocity)
                 jack.velocity.y = -jack.max_velocity
             // Translation
-            jack.position.x += jack.velocity.x
-            jack.position.y += jack.velocity.y
+            if(world.getTile(jack.position.x + jack.velocity.x, jack.position.y).passable)
+                jack.position.x += jack.velocity.x;
+            else
+                jack.velocity.x = 0;
+            
+            if(world.getTile(jack.position.x, jack.position.y+jack.velocity.y).passable)
+                jack.position.y += jack.velocity.y;
+            else
+                jack.velocity.y = 0;
+            
             // Deacceleration
             if(jack.velocity.x > 0)
             {
                 jack.velocity.x -= jack.deacceleration * delta
                 if(jack.velocity.x < 0)
-                    jack.velocity.x = 0
+                    jack.velocity.x = 0;
             }
             else if (jack.velocity.x < 0) {
                 jack.velocity.x += jack.deacceleration * delta
                 if(jack.velocity.x > 0 )
-                    jack.velocity.x = 0
+                    jack.velocity.x = 0;
             }
 	        if(jack.velocity.y > 0)
             {
