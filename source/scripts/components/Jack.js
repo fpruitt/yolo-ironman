@@ -9,8 +9,8 @@ var Jack = React.createClass({
             width: "1em",
             height: "1em",
             position: "absolute",
-            top: this.props.data.position.y + "em",
-            left: this.props.data.position.x + "em",
+            top: this.props.data.position.y - .5 + "em",
+            left: this.props.data.position.x - .5 + "em",
             backgroundColor: "red"
         }
     }
