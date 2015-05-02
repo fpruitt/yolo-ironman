@@ -68,3 +68,17 @@ Loop(function(delta)
 	}
 	renderer.render(stage);
 })
+
+var mapContainer = new PIXI.DisplayObjectContainer();
+var mapTexture = new PIXI.RenderTexture();
+
+var tilesetTexture = new PIXI.BaseTexture("32x32.bmp");
+var grassTexture = new PIXI.Texture(tilesetTexture, new PIXI.Rectangle(0,0,32,32))
+var grassSprite = new PIXI.Sprite(grassTexture);
+
+mapContainer.addChild(grassSprite);
+mapTexture.render(mapContainer);
+var background = new PIXI.Sprite(texture);
+
+stage.addChild(grassSprite);
+renderer.render(stage);
