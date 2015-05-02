@@ -42,12 +42,32 @@ var jack = {
 
 var GameFrame = require("<scripts>/components/GameFrame")
 
+var Camera = React.createClass({
+    render: function() {
+        return (
+            <div style={this.renderStyles()}>
+                {this.props.children}
+            </div>
+            
+        )
+    },
+    renderStyles: function(){
+        return {
+            position: 'absolute', 
+            top: this.props.target.position.y * -1 + HEIGHT/2 + 'em', 
+            left: this.props.target.position.x * -1 + WIDTH/2 + 'em'
+        }
+    }
+})
+
 var Game = React.createClass({
     render: function() {
         return (
             <GameFrame>
-                <World world={world}/>
-                <Jack data={jack}/>
+                <Camera target={jack}>
+                    <World world={world}/>
+                    <Jack data={jack}/>
+                </Camera>
             </GameFrame>
         )
     },
