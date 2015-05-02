@@ -1,5 +1,5 @@
 
-canvas
+#game-frame
 {
 	top: 0rem;
 	left: 0rem;
@@ -12,7 +12,7 @@ canvas
 
 @media(min-aspect-ratio: 4/3)
 {
-	canvas
+	#game-frame
 	{
 		height: 100vh;
 		width: 133.333vh;
@@ -21,10 +21,10 @@ canvas
 
 @media(max-aspect-ratio: 4/3)
 {
-	canvas
+	#game-frame
 	{
 		width: 100vw;
-		height: 133.333vw;
+		height: 75vw;
 	}
 }
 
@@ -33,7 +33,7 @@ body
 	background-color: #111;
 }
 
-canvas
+#game-frame
 {
 	background-color: #EEE;
 }
