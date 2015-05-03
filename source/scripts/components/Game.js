@@ -31,7 +31,7 @@ world.height = tiledmap.height
 
 var jack = {
     position: {
-        x: 10,
+        x: 40,
         y: 15
     },
     velocity: {
