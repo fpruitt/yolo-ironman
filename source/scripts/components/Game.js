@@ -24,6 +24,10 @@ var Game = React.createClass({
                         <World data={this.state.world}/>
                         {this.renderJacks()}
                     </Camera>
+                    <GUI>
+                        <World data={this.state.world}/>
+                        {this.renderJacks()}
+                    </GUI>
                 </GameFrame>
             )
         } else {
@@ -78,3 +82,23 @@ var Game = React.createClass({
 })
 
 module.exports = Game
+
+var GUI = React.createClass({
+    render: function() {
+        return (
+            <div id="map" style={this.renderStyles()}>
+                {this.props.children}
+            </div>
+        )
+    },
+    renderStyles: function() {
+        return {
+            "top": "0em",
+            "left": "0em",
+            "fontSize": "0.05em",
+            "position": "absolute",
+            "borderRight": "1px solid black",
+            "borderBottom": "1px solid black"
+        }
+    }
+})
