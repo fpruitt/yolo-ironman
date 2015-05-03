@@ -25,6 +25,4 @@ var WorldStore = Phlux.createStore({
     }
 })
 
-
-
 module.exports = WorldStore

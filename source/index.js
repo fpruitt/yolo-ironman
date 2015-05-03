@@ -1,6 +1,7 @@
 window.React = require("react/addons")
-window.Phlux = require("<scripts>/utilities/Phlux")
+window.ShortID = require("shortid")
 window.SocketIO = require("socket.io-client")
+window.Phlux = require("<scripts>/utilities/Phlux")
 
 window.WIDTH = 20
 window.HEIGHT = 15
