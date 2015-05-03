@@ -1,16 +1,18 @@
+var SIZE = 32
+
 var World = React.createClass({
     render: function() {
         return (
             <canvas ref="canvas"
                 style={this.renderStyles()}
-                width={this.props.world.width * 32}
-                height={this.props.world.height * 32}/>
+                width={this.props.data.width * SIZE}
+                height={this.props.data.height * SIZE}/>
         )
     },
     renderStyles: function() {
         return {
-            "width": this.props.world.width + "em",
-            "height": this.props.world.height + "em"
+            "width": this.props.data.width + "em",
+            "height": this.props.data.height + "em"
         }
     },
     renderCanvas: function() {
@@ -18,13 +20,13 @@ var World = React.createClass({
         var img = new Image()
         img.src = "assets/tileset.bmp"
         img.onload = function() {
-            for(var index in this.props.world.tiles) {
-                var tile = this.props.world.tiles[index]
-                var x = tile.position.x * 32
-                var y = tile.position.y * 32
+            for(var index in this.props.data.tiles) {
+                var tile = this.props.data.tiles[index]
+                var x = tile.position.x * SIZE
+                var y = tile.position.y * SIZE
                 var sy = Math.floor(tile.image / 64)
-                var sx = tile.image - (Math.floor(tile.image / 64) * 64) - 1
-                canvas.drawImage(img, sx * 32, sy * 32, 32, 32, x, y, 32, 32)
+                var sx = tile.image - (Math.floor(tile.image / 64) * 64)
+                canvas.drawImage(img, sx * SIZE, sy * SIZE, SIZE, SIZE, x, y, SIZE, SIZE)
             }
         }.bind(this)
     },
@@ -32,16 +34,10 @@ var World = React.createClass({
         this.renderCanvas()
     },
     shouldComponentUpdate: function(props) {
-        return props.world.tiles != this.props.world.tiles
+        return props.data.tiles != this.props.data.tiles
     },
     componentDidUpdate: function() {
         this.renderCanvas()
-    },
-    tiles: {
-        "images": {
-            195: "#0000CC",
-            3351: "#00CC00",
-        }
     }
 })
 

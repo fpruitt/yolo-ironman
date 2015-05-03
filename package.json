@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "An awesome game.",
   "dependencies": {
+    "express": "^4.12.3",
     "react": "~0.12.2",
-    "reflux": "^0.2.7"
+    "reflux": "^0.2.7",
+    "shortid": "^2.2.2",
+    "socket.io": "^1.3.5",
+    "socket.io-client": "^1.3.5"
   },
   "devDependencies": {
     "aliasify": "~1.7.2",

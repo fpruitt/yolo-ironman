@@ -1,8 +1,20 @@
+var path = require("path")
+var HTTP = require("http")
+var Express = require("express")
+var SocketIO = require("socket.io")
 
-var express = require("express")
-var server = express()
+app = new Express()
+app.use(Express.static(Path.join(__dirname, "/build")))
 
-server.use(express.static(__dirname))
+server = HTTP.Server(app)
+server.listen(1337, function() {
+	console.log("127.0.0.1:1337")
+})
 
-server.listen(1337);
-console.log('Server running at http://127.0.0.1:1337/');
+io = SocketIO(server)
+io.on("connection", function(socket) {
+	console.log("connected!")
+	socket.on("disconnect", function() {
+		console.log("disconnected!")
+	})
+})
