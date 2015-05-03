@@ -11,7 +11,7 @@ var Jack = React.createClass({
             position: "absolute",
             top: this.props.data.position.y - .5 + "em",
             left: this.props.data.position.x - .5 + "em",
-            backgroundColor: "red"
+            backgroundColor: this.props.data.color || "#EEE"
         }
     }
 })

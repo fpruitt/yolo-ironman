@@ -12,15 +12,17 @@ server.listen(1337, function() {
 	console.log("127.0.0.1:1337")
 })
 
-var alldata = {}
+var gamedata = {}
 
 io = SocketIO(server)
 io.on("connection", function(socket) {
-	var myid = null
-	for(var id in alldata) {
-		socket.emit("update jack", id, alldata[id])
+	for(var id in gamedata) {
+		socket.emit("update jack", id, gamedata[id])
 	}
+	var myid = null
 	socket.on("join", function(id, coords) {
+		// Geolocate a Team
+		myid = id
 		var team = {
 			distance: Number.MAX_VALUE
 		}
@@ -31,30 +33,32 @@ io.on("connection", function(socket) {
 				team.city = city
 			}
 		}
-		myid = id
-		alldata[id] = {
+		// Create a Player
+		gamedata[id] = {
 			"position": {
-				"x": 10,
-				"y": 15
+				"x": gighacks[team.city].spawn.x,
+				"y": gighacks[team.city].spawn.y
             },
 			"velocity": {
 				"x": 0,
 				"y": 0
-            },
+			},
 			"maxvelocity": 0.2,
 			"acceleration": 5,
-			"deacceleration": 1.5
+			"deacceleration": 1.5,
+			"color": gighacks[team.city].color
         }
+		// Publish and Broadcast
 		console.log(myid + " has joined!")
-		socket.emit("update jack", id, alldata[id])
-		socket.broadcast.emit("update jack", id, alldata[id])
+		socket.emit("update jack", id, gamedata[id])
+		socket.broadcast.emit("update jack", id, gamedata[id])
 	})
 	socket.on("update jack", function(id, data) {
-		alldata[id] = data
-		socket.broadcast.emit("update jack", id, alldata[id])
+		gamedata[id] = data
+		socket.broadcast.emit("update jack", id, gamedata[id])
 	})
 	socket.on("disconnect", function() {
-		delete alldata[myid]
+		delete gamedata[myid]
 		console.log(myid + " has quit")
 		socket.broadcast.emit("remove jack", myid)
 	})
@@ -83,30 +87,55 @@ var gighacks = {
 		"coords": {
 			"lat": 37.7833,
 			"long": -122.4167
-		}
+		},
+		"spawn": {
+			"x": 26,
+			"y": 84
+		},
+		"color": "green"
 	},
 	"kansascity": {
 		"coords": {
 			"lat": 39.0997,
 			"long": -94.5783
-		}
+		},
+		"spawn": {
+			"x": 53,
+			"y": 56
+		},
+		"color": "purple"
 	},
 	"chattanooga": {
 		"coords": {
 			"lat": 35.0456,
 			"long": -85.2672
-		}
+		},
+		"spawn": {
+			"x": 11,
+			"y": 19
+		},
+		"color": "orange"
 	},
 	"burlington": {
 		"coords": {
 			"lat": 44.4758,
 			"long": -73.2119
-		}
+		},
+		"spawn": {
+			"x": 88,
+			"y": 70
+		},
+		"color": "blue"
 	},
 	"charlotte": {
 		"coords": {
 			"lat": 35.2269,
 			"long": -80.8433
-		}
+		},
+		"spawn": {
+			"x": 66,
+			"y": 25
+		},
+		"color": "red"
 	},
 }
