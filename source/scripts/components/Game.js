@@ -8,6 +8,7 @@ var Camera = require("<scripts>/components/Camera")
 
 var WorldStore = require("<scripts>/stores/WorldStore")
 var JackStore = require("<scripts>/stores/JackStore")
+var RelicStore = require("<scripts>/stores/RelicStore")
 
 var myid = null
 
@@ -15,6 +16,7 @@ var Game = React.createClass({
     mixins: [
         Phlux.connectStore(JackStore, "jacks"),
         Phlux.connectStore(WorldStore, "world"),
+        Phlux.connectStore(RelicStore, "relics"),
     ],
     render: function() {
         if(myid != null) {
@@ -22,31 +24,31 @@ var Game = React.createClass({
                 <GameFrame>
                     <Camera target={this.state.jacks[myid]}>
                         <World data={this.state.world}/>
-                        {this.renderJacks()}
+                        {this.renderEntities(Jack, this.state.jacks)}
+                        {this.renderEntities(Relic, this.state.relics)}
                     </Camera>
                     <GUI>
                         <World data={this.state.world}/>
-                        {this.renderJacks()}
+                        {this.renderEntities(Jack, this.state.jacks)}
                     </GUI>
                 </GameFrame>
             )
         } else {
             return (
                 <GameFrame>
-                    <Camera zoom={7}>
+                    <Camera zoom={8}>
                         <World data={this.state.world}/>
-                        {this.renderJacks()}
+                        {this.renderEntities(Jack, this.state.jacks)}
                     </Camera>
                 </GameFrame>
             )
         }
     },
-    renderJacks: function() {
+    renderEntities: function(Class, data) {
         var renderings = []
-        for(var id in this.state.jacks) {
-            var jack = this.state.jacks[id]
+        for(var id in data) {
             renderings.push(
-                <Jack key={id} data={jack}/>
+                <Class key={id} data={data[id]}/>
             )
         }
         return renderings
@@ -86,7 +88,7 @@ module.exports = Game
 var GUI = React.createClass({
     render: function() {
         return (
-            <div id="map" style={this.renderStyles()}>
+            <div style={this.renderStyles()}>
                 {this.props.children}
             </div>
         )
@@ -99,6 +101,25 @@ var GUI = React.createClass({
             "position": "absolute",
             "borderRight": "1px solid black",
             "borderBottom": "1px solid black"
+        }
+    }
+})
+
+var Relic = React.createClass({
+    render: function() {
+        return (
+            <div style={this.renderStyles()}/>
+        )
+    },
+    renderStyles: function() {
+        return {
+            width: "2em",
+            height: "2em",
+            position: "absolute",
+            borderRadius: "100em",
+            left: this.props.data.position.x - 1 + "em",
+            top: this.props.data.position.y - 1 + "em",
+            backgroundColor: this.props.data.color
         }
     }
 })
