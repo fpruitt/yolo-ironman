@@ -46,7 +46,8 @@ io.on("connection", function(socket) {
 			"maxvelocity": 0.2,
 			"acceleration": 5,
 			"deacceleration": 1.5,
-			"color": gighacks[team.city].color
+			"color": gighacks[team.city].color,
+			"city": team.city
         }
 		// Publish and Broadcast
 		console.log(myid + " has joined!")
