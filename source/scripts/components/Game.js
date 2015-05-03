@@ -56,8 +56,8 @@ var Game = React.createClass({
         return renderings
     },
     componentDidMount: function() {
-        //var Socket = SocketIO("http://66.85.234.122:31337")
-        var Socket = SocketIO("http://127.0.0.1:1337")
+        var Socket = SocketIO("http://66.85.234.122:31337")
+        //var Socket = SocketIO("http://127.0.0.1:1337")
         Socket.on("connect", function() {
             setTimeout(function() {
                 myid = ShortID.generate()
