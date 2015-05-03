@@ -1,5 +1,8 @@
 var Input = require("<scripts>/utilities/Input")
+var isIntersecting = require("<scripts>/utilities/isIntersecting")
+
 var WorldStore = require("<scripts>/stores/WorldStore")
+var RelicStore = require("<scripts>/stores/RelicStore")
 
 var JackStore = Phlux.createStore({
 	updateJack: function(id, data) {
@@ -10,7 +13,7 @@ var JackStore = Phlux.createStore({
 		delete this.data[id]
 		this.trigger()
 	},
-	updateJackFromLoop: function(id, delta, callback) {
+	updateJackFromLoop: function(id, delta, callback, Socket) {
 		var jack = this.data[id]
 		if(jack === undefined) {
 			return
@@ -75,6 +78,15 @@ var JackStore = Phlux.createStore({
             if(jack.velocity.y > 0 )
                 jack.velocity.y = 0
         }
+		// Entity Collision
+		for(var rid in RelicStore.data) {
+			var relic = RelicStore.data[rid]
+			if(isIntersecting(jack, relic)) {
+				relic.color = jack.color
+				RelicStore.trigger()
+				Socket.emit("claim relic", rid, relic.color)
+			}
+		}
 		// Return
 		callback(jack)
     }

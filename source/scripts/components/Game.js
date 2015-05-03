@@ -30,6 +30,7 @@ var Game = React.createClass({
                     <GUI>
                         <World data={this.state.world}/>
                         {this.renderEntities(Jack, this.state.jacks)}
+                        {this.renderEntities(Relic, this.state.relics)}
                     </GUI>
                 </GameFrame>
             )
@@ -39,6 +40,7 @@ var Game = React.createClass({
                     <Camera zoom={8}>
                         <World data={this.state.world}/>
                         {this.renderEntities(Jack, this.state.jacks)}
+                        {this.renderEntities(Relic, this.state.relics)}
                     </Camera>
                 </GameFrame>
             )
@@ -54,7 +56,8 @@ var Game = React.createClass({
         return renderings
     },
     componentDidMount: function() {
-        var Socket = SocketIO("http://66.85.234.122:31337")
+        //var Socket = SocketIO("http://66.85.234.122:31337")
+        var Socket = SocketIO("http://127.0.0.1:1337")
         Socket.on("connect", function() {
             setTimeout(function() {
                 myid = ShortID.generate()
@@ -72,18 +75,26 @@ var Game = React.createClass({
         Socket.on("remove jack", function(id) {
             JackStore.removeJack(id)
         })
+        Socket.on("update relic", function(id, data) {
+            RelicStore.data[id] = data
+            RelicStore.trigger()
+        })
         Socket.on("disconnect", function() {
             window.location = window.location
         })
         Loop(function(delta) {
             JackStore.updateJackFromLoop(myid, delta, function(jack) {
                 Socket.emit("update jack", myid, jack)
-            })
+            }, Socket)
         })
     }
 })
 
 module.exports = Game
+
+
+
+
 
 var GUI = React.createClass({
     render: function() {
@@ -116,10 +127,12 @@ var Relic = React.createClass({
             width: "2em",
             height: "2em",
             position: "absolute",
-            borderRadius: "100em",
             left: this.props.data.position.x - 1 + "em",
             top: this.props.data.position.y - 1 + "em",
-            backgroundColor: this.props.data.color
+            outlineWidth: "0.75em",
+            outlineStyle: "solid",
+            backgroundColor: "white",
+            outlineColor: this.props.data.color
         }
     }
 })

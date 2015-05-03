@@ -12,12 +12,53 @@ server.listen(1337, function() {
 	console.log("127.0.0.1:1337")
 })
 
-var gamedata = {}
+var jacks = {}
+var relics = {
+	"a": {
+		"position": {
+			"x": 86,
+			"y": 4
+		},
+		"color": "white",
+		"width": 2,
+		"height": 2
+	},
+	"b": {
+		"position": {
+			"x": 34,
+			"y": 21
+		},
+		"color": "white",
+		"width": 2,
+		"height": 2
+	},
+	"d": {
+		"position": {
+			"x": 86,
+			"y": 64
+		},
+		"color": "white",
+		"width": 2,
+		"height": 2
+	},
+	"e": {
+		"position": {
+			"x": 33,
+			"y": 59
+		},
+		"color": "white",
+		"width": 2,
+		"height": 2
+	}
+}
 
 io = SocketIO(server)
 io.on("connection", function(socket) {
-	for(var id in gamedata) {
-		socket.emit("update jack", id, gamedata[id])
+	for(var id in jacks) {
+		socket.emit("update jack", id, jacks[id])
+	}
+	for(var id in relics) {
+		socket.emit("update relic", id, relics[id])
 	}
 	var myid = null
 	socket.on("join", function(id, coords) {
@@ -34,7 +75,7 @@ io.on("connection", function(socket) {
 			}
 		}
 		// Create a Player
-		gamedata[id] = {
+		jacks[id] = {
 			"position": {
 				"x": gighacks[team.city].spawn.x,
 				"y": gighacks[team.city].spawn.y
@@ -46,20 +87,26 @@ io.on("connection", function(socket) {
 			"maxvelocity": 0.2,
 			"acceleration": 5,
 			"deacceleration": 1.5,
+			"width": 1,
+			"height": 1,
 			"color": gighacks[team.city].color,
 			"city": team.city
         }
 		// Publish and Broadcast
 		console.log(myid + " has joined!")
-		socket.emit("update jack", id, gamedata[id])
-		socket.broadcast.emit("update jack", id, gamedata[id])
+		socket.emit("update jack", id, jacks[id])
+		socket.broadcast.emit("update jack", id, jacks[id])
 	})
 	socket.on("update jack", function(id, data) {
-		gamedata[id] = data
-		socket.broadcast.emit("update jack", id, gamedata[id])
+		jacks[id] = data
+		socket.broadcast.emit("update jack", id, jacks[id])
+	})
+	socket.on("claim relic", function(id, color) {
+		relics[id].color = color
+		socket.broadcast.emit("update relic", id, relics[id])
 	})
 	socket.on("disconnect", function() {
-		delete gamedata[myid]
+		delete jacks[myid]
 		console.log(myid + " has quit")
 		socket.broadcast.emit("remove jack", myid)
 	})
