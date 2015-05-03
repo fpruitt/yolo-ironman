@@ -9,8 +9,7 @@ var Camera = require("<scripts>/components/Camera")
 var WorldStore = require("<scripts>/stores/WorldStore")
 var JackStore = require("<scripts>/stores/JackStore")
 
-var myid = ShortID.generate()
-var socket = SocketIO("http://localhost:1337")
+var myid = null
 
 var Game = React.createClass({
     mixins: [
@@ -18,14 +17,25 @@ var Game = React.createClass({
         Phlux.connectStore(WorldStore, "world"),
     ],
     render: function() {
-        return (
-            <GameFrame>
-                <Camera target={this.state.jacks[myid]}>
-                    <World data={this.state.world}/>
-                    {this.renderJacks()}
-                </Camera>
-            </GameFrame>
-        )
+        if(myid != null) {
+            return (
+                <GameFrame>
+                    <Camera target={this.state.jacks[myid]}>
+                        <World data={this.state.world}/>
+                        {this.renderJacks()}
+                    </Camera>
+                </GameFrame>
+            )
+        } else {
+            return (
+                <GameFrame>
+                    <Camera zoom={7}>
+                        <World data={this.state.world}/>
+                        {this.renderJacks()}
+                    </Camera>
+                </GameFrame>
+            )
+        }
     },
     renderJacks: function() {
         var renderings = []
@@ -38,21 +48,30 @@ var Game = React.createClass({
         return renderings
     },
     componentDidMount: function() {
-        socket.on("connect", function() {
-            socket.emit("join", myid)
+        var Socket = SocketIO("http://localhost:1337")
+        Socket.on("connect", function() {
+            setTimeout(function() {
+                myid = ShortID.generate()
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    Socket.emit("join", myid, {
+                        "lat": position.coords.latitude,
+                        "long": position.coords.longitude
+                    })
+                })
+            }, 1000)
         })
-        socket.on("update jack", function(id, data) {
+        Socket.on("update jack", function(id, data) {
             JackStore.updateJack(id, data)
         })
-        socket.on("remove jack", function(id) {
+        Socket.on("remove jack", function(id) {
             JackStore.removeJack(id)
         })
-        socket.on("disconnect", function() {
+        Socket.on("disconnect", function() {
             window.location = window.location
         })
         Loop(function(delta) {
             JackStore.updateJackFromLoop(myid, delta, function(jack) {
-                socket.emit("update jack", myid, jack)
+                Socket.emit("update jack", myid, jack)
             })
         })
     }
