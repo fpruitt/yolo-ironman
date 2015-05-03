@@ -15,7 +15,7 @@ var WorldStore = Phlux.createStore({
 		                "y": y
 		            },
 		            "image": tile,
-		            "passable": tile != 149 && tile != 194
+		            "passable": tile != 149 && tile != 194 && tile != 150 && tile != 858
 		        }
 		    }
 		}
